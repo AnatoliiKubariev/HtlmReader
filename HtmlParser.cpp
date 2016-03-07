@@ -2,6 +2,7 @@
 #include "HtmlNode.h"
 #include <istream>
 #include <string>
+#include <stdexcept>
 
 namespace HtmlParser
 {
@@ -13,7 +14,7 @@ std::vector<HtmlNode> ParseHtml(std::istream& io_is)
   {
   if(io_is.eof())
     {
-    throw "eof";
+    throw std::logic_error("eof");
     }
 
   std::vector<HtmlNode> parsed_html;
@@ -34,7 +35,7 @@ HtmlNode GetNode(std::istream& io_is)
   std::string node_name = GetString('>', io_is);
   if(!FindNext('>', io_is))
     {
-    throw "no >";
+    throw std::logic_error("no >");
     }
 
   auto pos = io_is.tellg();
@@ -57,22 +58,22 @@ HtmlNode GetNode(std::istream& io_is)
 
   if(!FindNext('<', io_is))
     {
-    throw "no <";
+    throw std::logic_error("no <");
     }
   if(!FindNext('/', io_is))
     {
-    throw "no /";
+    throw std::logic_error("no /");
     }
 
   //get closed name
   std::string node_close_name = GetString('>', io_is);
   if(!FindNext('>', io_is))
     {
-    throw "no >";
+    throw std::logic_error("no >");
     }
   if(node_close_name != node_name)
     {
-    throw "invalid close name";
+    throw std::logic_error("invalid close name");
     }
 
   HtmlNode node(node_name, node_text, node_childs);
